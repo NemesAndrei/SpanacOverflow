@@ -42,12 +42,6 @@ public class QuestionVotesService {
         return iQuestionVoteRepository.save(questionVotes);
     }
 
-    public QuestionVotes updateQuestionVote(Long id, QuestionVotes questionVotes) {
-        QuestionVotes questionVote = this.getQuestionVote(id);
-        questionVote.setVote(questionVote.getVote());
-        return iQuestionVoteRepository.save(questionVote);
-    }
-
     public String voteQuestion(Long questionId, Long userId, Integer vote) {
         User user = userService.getUser(userId);
         Question question = questionService.getQuestion(questionId);
@@ -56,21 +50,29 @@ public class QuestionVotesService {
         }
         Optional<QuestionVotes> questionVotes = iQuestionVoteRepository.findByUserAndQuestion(user, question);
         if(!questionVotes.isPresent()) {
-            QuestionVotes questionVotes1 = new QuestionVotes();
-            questionVotes1.setUser(user);
-            questionVotes1.setVote(vote);
-            questionVotes1.setQuestion(question);
-            questionService.updateQuestionVotes(questionId,vote);
-            saveQuestionVote(questionVotes1);
-            return "Vote successful!";
+            return createQuestionVoteIfNotExistent(questionId, vote, user, question);
         }
         if(questionVotes.get().getVote().equals(vote)) {
             return "User cannot vote twice on the same question!";
         }
+        return changeVoteIfExistent(questionId, vote, questionVotes);
+    }
+
+    private String changeVoteIfExistent(Long questionId, Integer vote, Optional<QuestionVotes> questionVotes) {
         questionService.updateQuestionVotes(questionId,(-1)*(questionVotes.get().getVote()));
         questionVotes.get().setVote(vote);
         questionService.updateQuestionVotes(questionId, vote);
         this.saveQuestionVote(questionVotes.get());
         return "Vote changed successfully!";
+    }
+
+    private String createQuestionVoteIfNotExistent(Long questionId, Integer vote, User user, Question question) {
+        QuestionVotes questionVotes1 = new QuestionVotes();
+        questionVotes1.setUser(user);
+        questionVotes1.setVote(vote);
+        questionVotes1.setQuestion(question);
+        questionService.updateQuestionVotes(questionId, vote);
+        saveQuestionVote(questionVotes1);
+        return "Vote successful!";
     }
 }

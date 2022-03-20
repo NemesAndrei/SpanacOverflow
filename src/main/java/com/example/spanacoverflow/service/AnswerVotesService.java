@@ -43,37 +43,39 @@ public class AnswerVotesService {
         return iAnswerVoteRepository.save(answerVotes);
     }
 
-    public AnswerVotes updateAnswerVote(Long id, AnswerVotes answerVotes) {
-        AnswerVotes answerVotes1 = this.getAnswerVote(id);
-        answerVotes1.setVote(answerVotes.getVote());
-        return iAnswerVoteRepository.save(answerVotes1);
-    }
-
     public String voteAnswer(Long answerId, Long userId, Integer vote) {
         User user = userService.getUser(userId);
         Answer answer = answerService.getAnswer(answerId);
-        if(answer.getUser().getId()==userId) {
+        if(answer.getUser().getId().equals(userId)) {
             return "User cannot vote their own answer!";
         }
         Optional<AnswerVotes> answerVotes = iAnswerVoteRepository.findByUserAndAnswer(user, answer);
         if(!answerVotes.isPresent()) {
-            AnswerVotes answerVotes1 = new AnswerVotes();
-            answerVotes1.setUser(user);
-            answerVotes1.setVote(vote);
-            answerVotes1.setAnswer(answer);
-            answerService.updateAnswerVotes(answerId,vote);
-            saveAnswerVote(answerVotes1);
-            return "Vote successful!";
+            return createAnswerVoteIfNotExistent(answerId, vote, user, answer);
         }
         if(answerVotes.get().getVote().equals(vote)) {
             return "User cannot vote twice on the same answer!";
         }
 
+        return changeAnswerIfExistent(answerId, vote, answerVotes);
+    }
+
+    private String changeAnswerIfExistent(Long answerId, Integer vote, Optional<AnswerVotes> answerVotes) {
         answerService.updateAnswerVotes(answerId,(-1)*(answerVotes.get().getVote()));
         answerVotes.get().setVote(vote);
         answerService.updateAnswerVotes(answerId, vote);
         this.saveAnswerVote(answerVotes.get());
         return "Vote changed successfully!";
+    }
+
+    private String createAnswerVoteIfNotExistent(Long answerId, Integer vote, User user, Answer answer) {
+        AnswerVotes answerVotes1 = new AnswerVotes();
+        answerVotes1.setUser(user);
+        answerVotes1.setVote(vote);
+        answerVotes1.setAnswer(answer);
+        answerService.updateAnswerVotes(answerId, vote);
+        saveAnswerVote(answerVotes1);
+        return "Vote successful!";
     }
 
 }
