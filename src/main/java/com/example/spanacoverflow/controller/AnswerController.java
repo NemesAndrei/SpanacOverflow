@@ -27,7 +27,7 @@ public class AnswerController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/save")
     @ResponseBody
-    public Answer saveAnswer(@RequestBody Answer answer, @RequestParam(name = "questionid") Long questionId, @RequestParam(name = "userid") Long userId){
+    public Answer saveAnswer(@RequestBody Answer answer, @RequestParam(name = "questionid") Long questionId, @RequestParam(name = "userid") Long userId) {
         return answerService.saveAnswer(answer, questionId, userId);
     }
 

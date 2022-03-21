@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class AnswerVotesService {
@@ -21,7 +20,7 @@ public class AnswerVotesService {
     @Autowired
     AnswerService answerService;
 
-    public List<AnswerVotes> getAllAnswerVotes(){
+    public List<AnswerVotes> getAllAnswerVotes() {
         return (List<AnswerVotes>) iAnswerVoteRepository.findAll();
     }
 
@@ -46,14 +45,14 @@ public class AnswerVotesService {
     public String voteAnswer(Long answerId, Long userId, Integer vote) {
         User user = userService.getUser(userId);
         Answer answer = answerService.getAnswer(answerId);
-        if(answer.getUser().getId().equals(userId)) {
+        if (answer.getUser().getId().equals(userId)) {
             return "User cannot vote their own answer!";
         }
         Optional<AnswerVotes> answerVotes = iAnswerVoteRepository.findByUserAndAnswer(user, answer);
-        if(!answerVotes.isPresent()) {
+        if (!answerVotes.isPresent()) {
             return createAnswerVoteIfNotExistent(answerId, vote, user, answer);
         }
-        if(answerVotes.get().getVote().equals(vote)) {
+        if (answerVotes.get().getVote().equals(vote)) {
             return "User cannot vote twice on the same answer!";
         }
 
@@ -61,7 +60,7 @@ public class AnswerVotesService {
     }
 
     private String changeAnswerIfExistent(Long answerId, Integer vote, Optional<AnswerVotes> answerVotes) {
-        answerService.updateAnswerVotes(answerId,(-1)*(answerVotes.get().getVote()));
+        answerService.updateAnswerVotes(answerId, (-1) * (answerVotes.get().getVote()));
         answerVotes.get().setVote(vote);
         answerService.updateAnswerVotes(answerId, vote);
         this.saveAnswerVote(answerVotes.get());

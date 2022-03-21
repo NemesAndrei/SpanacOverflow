@@ -1,8 +1,6 @@
 package com.example.spanacoverflow.service;
 
 import com.example.spanacoverflow.model.*;
-import com.example.spanacoverflow.repository.IAnswerVoteRepository;
-import com.example.spanacoverflow.repository.IQuestionRepository;
 import com.example.spanacoverflow.repository.IQuestionVoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,21 +43,21 @@ public class QuestionVotesService {
     public String voteQuestion(Long questionId, Long userId, Integer vote) {
         User user = userService.getUser(userId);
         Question question = questionService.getQuestion(questionId);
-        if(question.getUser().getId().equals(userId)) {
+        if (question.getUser().getId().equals(userId)) {
             return "User cannot vote their own question!";
         }
         Optional<QuestionVotes> questionVotes = iQuestionVoteRepository.findByUserAndQuestion(user, question);
-        if(!questionVotes.isPresent()) {
+        if (!questionVotes.isPresent()) {
             return createQuestionVoteIfNotExistent(questionId, vote, user, question);
         }
-        if(questionVotes.get().getVote().equals(vote)) {
+        if (questionVotes.get().getVote().equals(vote)) {
             return "User cannot vote twice on the same question!";
         }
         return changeVoteIfExistent(questionId, vote, questionVotes);
     }
 
     private String changeVoteIfExistent(Long questionId, Integer vote, Optional<QuestionVotes> questionVotes) {
-        questionService.updateQuestionVotes(questionId,(-1)*(questionVotes.get().getVote()));
+        questionService.updateQuestionVotes(questionId, (-1) * (questionVotes.get().getVote()));
         questionVotes.get().setVote(vote);
         questionService.updateQuestionVotes(questionId, vote);
         this.saveQuestionVote(questionVotes.get());

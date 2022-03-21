@@ -1,16 +1,13 @@
 package com.example.spanacoverflow.service;
 
-import com.example.spanacoverflow.model.Answer;
 import com.example.spanacoverflow.model.Question;
 import com.example.spanacoverflow.model.Tag;
 import com.example.spanacoverflow.model.User;
 import com.example.spanacoverflow.repository.IQuestionRepository;
-import com.example.spanacoverflow.repository.ITagRepository;
 import com.example.spanacoverflow.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -58,9 +55,9 @@ public class QuestionService {
 
         User user = userService.getUser(userId);
         Set<Tag> tagList = new HashSet<>();
-        for(String tag:tags) {
+        for (String tag : tags) {
             Tag tagNew = tagService.getTagByName(tag);
-            if(tagNew!=null) {
+            if (tagNew != null) {
                 tagList.add(tagNew);
             } else {
                 tagNew = new Tag();
@@ -85,24 +82,7 @@ public class QuestionService {
 
     public Question updateQuestionVotes(Long id, Integer vote) {
         Question question = this.getQuestion(id);
-        question.setVotes(question.getVotes()+vote);
+        question.setVotes(question.getVotes() + vote);
         return iQuestionRepository.save(question);
     }
-
-/*    public String voteQuestion(Long questionId, Long userId, Integer vote) {
-        User user = userService.getUser(userId);
-        Question question = iQuestionRepository.getById(questionId);
-        if(question.getUser().equals(user)) {
-            return "User cannot vote their own question!";
-        }
-        if(question.getUserLikes().contains(user)) {
-            return "A user can only vote once on a question!";
-        }
-        Set<User> userSet = question.getUserLikes();
-        userSet.add(user);
-        question.setUserLikes(userSet);
-        question.setVotes(question.getVotes()+vote);
-        iQuestionRepository.save(question);
-        return "Vote success!";
-    }*/
 }
