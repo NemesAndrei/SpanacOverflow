@@ -45,6 +45,7 @@ public class AnswerService {
         answer.setUser(user);
         answer.setQuestion(question);
         answer.setCreated(DateUtils.getDate());
+        answer.setVotes(0);
         return iAnswerRepository.save(answer);
     }
 
