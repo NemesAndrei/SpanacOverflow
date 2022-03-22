@@ -33,6 +33,7 @@ public class UserService {
     }
 
     public User saveUser(User user) {
+        user.setPrivilege(0);
         return iUserRepository.save(user);
     }
 
