@@ -41,9 +41,9 @@ public class TagService {
         return iTagRepository.save(tag);
     }
 
-    public Tag updateTag(Long id, Tag tag) {
+    public Tag updateTag(Long id, String body) {
         Tag initialTag = this.getTag(id);
-        initialTag.setName(tag.getName());
+        initialTag.setName(body);
         return iTagRepository.save(initialTag);
     }
 }

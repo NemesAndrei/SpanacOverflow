@@ -4,6 +4,7 @@ import com.example.spanacoverflow.model.Answer;
 import com.example.spanacoverflow.model.Question;
 import com.example.spanacoverflow.model.User;
 import com.example.spanacoverflow.repository.IAnswerRepository;
+import com.example.spanacoverflow.repository.IAnswerVoteRepository;
 import com.example.spanacoverflow.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class AnswerService {
     QuestionService questionService;
     @Autowired
     UserService userService;
+    @Autowired
+    IAnswerVoteRepository iAnswerVoteRepository;
 
     public List<Answer> getAllAnswers() {
         return (List<Answer>) iAnswerRepository.findAllByOrderByVotesDesc();

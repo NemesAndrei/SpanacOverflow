@@ -55,10 +55,16 @@ public class QuestionController {
         return questionVotesService.voteQuestion(questionId, userId, vote);
     }
 
-/*    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
     @ResponseBody
     public String deleteQuestion(@RequestParam(name = "questionid") Long questionId) {
         return questionService.deleteQuestion(questionId);
-    }*/
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/update")
+    @ResponseBody
+    public Question updateQuestion(@RequestBody Question question, @RequestParam(name = "questionid") Long questionId) {
+        return questionService.updateQuestion(questionId, question);
+    }
 }
 

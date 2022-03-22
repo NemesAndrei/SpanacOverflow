@@ -52,21 +52,15 @@ public class QuestionService {
         return questionList;
     }
 
-/*    public String deleteQuestion(Long id) {
+    public String deleteQuestion(Long id) {
         try {
             Question question = this.getQuestion(id);
-            question.getAnswerSet().stream().forEach(answer -> iAnswerRepository.deleteById(answer.getId()));
-            List<QuestionVotes> questionVotes = iQuestionVoteRepository.findAll();
-            questionVotes.stream()
-                    .filter(questionVotes1 -> questionVotes1.getQuestion().equals(question))
-                    .forEach(questionVotes1 -> iQuestionVoteRepository.delete(questionVotes1));
-
             iQuestionRepository.delete(question);
             return "Delete success";
         } catch (Exception e) {
             return "Delete failed";
         }
-    }*/
+    }
 
     public Question saveQuestion(Question question, List<String> tags, Long userId) {
 
