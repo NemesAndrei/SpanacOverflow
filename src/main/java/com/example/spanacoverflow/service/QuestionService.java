@@ -1,9 +1,13 @@
 package com.example.spanacoverflow.service;
 
 import com.example.spanacoverflow.model.Question;
+import com.example.spanacoverflow.model.QuestionVotes;
 import com.example.spanacoverflow.model.Tag;
 import com.example.spanacoverflow.model.User;
+import com.example.spanacoverflow.repository.IAnswerRepository;
+import com.example.spanacoverflow.repository.IAnswerVoteRepository;
 import com.example.spanacoverflow.repository.IQuestionRepository;
+import com.example.spanacoverflow.repository.IQuestionVoteRepository;
 import com.example.spanacoverflow.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +21,13 @@ public class QuestionService {
     IQuestionRepository iQuestionRepository;
 
     @Autowired
+    IQuestionVoteRepository iQuestionVoteRepository;
+
+    @Autowired
     TagService tagService;
+
+    @Autowired
+    IAnswerRepository iAnswerRepository;
 
     @Autowired
     UserService userService;
@@ -42,14 +52,21 @@ public class QuestionService {
         return questionList;
     }
 
-    public String deleteQuestion(Long id) {
+/*    public String deleteQuestion(Long id) {
         try {
-            iQuestionRepository.delete(this.getQuestion(id));
+            Question question = this.getQuestion(id);
+            question.getAnswerSet().stream().forEach(answer -> iAnswerRepository.deleteById(answer.getId()));
+            List<QuestionVotes> questionVotes = iQuestionVoteRepository.findAll();
+            questionVotes.stream()
+                    .filter(questionVotes1 -> questionVotes1.getQuestion().equals(question))
+                    .forEach(questionVotes1 -> iQuestionVoteRepository.delete(questionVotes1));
+
+            iQuestionRepository.delete(question);
             return "Delete success";
         } catch (Exception e) {
             return "Delete failed";
         }
-    }
+    }*/
 
     public Question saveQuestion(Question question, List<String> tags, Long userId) {
 

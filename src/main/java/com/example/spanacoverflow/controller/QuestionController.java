@@ -54,5 +54,11 @@ public class QuestionController {
     public String voteQuestionById(@RequestParam(name = "questionid") Long questionId, @RequestParam(name = "userid") Long userId, @RequestParam(name = "vote") Integer vote) {
         return questionVotesService.voteQuestion(questionId, userId, vote);
     }
+
+/*    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+    @ResponseBody
+    public String deleteQuestion(@RequestParam(name = "questionid") Long questionId) {
+        return questionService.deleteQuestion(questionId);
+    }*/
 }
 
