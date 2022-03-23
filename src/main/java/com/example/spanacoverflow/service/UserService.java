@@ -44,4 +44,9 @@ public class UserService {
         initialUser.setPassword(user.getPassword());
         return iUserRepository.save(initialUser);
     }
+
+    public User findByUsername(String username) {
+        Optional<User> user = iUserRepository.findByUsername(username);
+        return user.orElse(null);
+    }
 }
