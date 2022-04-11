@@ -34,7 +34,12 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/update")
     @ResponseBody
     public User updateUser(@RequestBody User user, @RequestParam(name = "userid") Long userId) {
-        return userService.updateUser(userId, user);
+        try {
+            return userService.updateUser(userId, user);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
