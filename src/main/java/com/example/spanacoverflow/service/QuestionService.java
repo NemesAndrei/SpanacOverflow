@@ -52,6 +52,11 @@ public class QuestionService {
         return questionList;
     }
 
+    public List<Question> getAllQuestionsFilteredByUser(Long userId) {
+        User user = userService.getUser(userId);
+        return (List<Question>) iQuestionRepository.findAllByUser(user);
+    }
+
     public String deleteQuestion(Long id) {
         try {
             Question question = this.getQuestion(id);
@@ -86,6 +91,7 @@ public class QuestionService {
 
     public Question updateQuestion(Long id, Question question) {
         Question initialQuestion = this.getQuestion(id);
+        initialQuestion.setTitle(question.getTitle());
         initialQuestion.setBody(question.getBody());
         initialQuestion.setTags(question.getTags());
         return iQuestionRepository.save(initialQuestion);

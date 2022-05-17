@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/questions")
 public class QuestionController {
 
@@ -25,7 +26,7 @@ public class QuestionController {
         return questionService.getAllQuestions();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/save")
+    @RequestMapping(method = RequestMethod.PUT, value = "/save")
     @ResponseBody
     public Question saveQuestion(@RequestBody Question question, @RequestParam(name = "tags") List<String> tags, @RequestParam(name = "userid") Long userId) {
         return questionService.saveQuestion(question, tags, userId);
@@ -49,6 +50,12 @@ public class QuestionController {
         return questionService.getQuestion(id);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/getForUser")
+    @ResponseBody
+    public List<Question> getQuestionsForUser(@RequestParam(name = "userid") Long userId) {
+        return questionService.getAllQuestionsFilteredByUser(userId);
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/vote")
     @ResponseBody
     public String voteQuestionById(@RequestParam(name = "questionid") Long questionId, @RequestParam(name = "userid") Long userId, @RequestParam(name = "vote") Integer vote) {
@@ -61,7 +68,7 @@ public class QuestionController {
         return questionService.deleteQuestion(questionId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/update")
+    @RequestMapping(method = RequestMethod.PUT, value = "/update")
     @ResponseBody
     public Question updateQuestion(@RequestBody Question question, @RequestParam(name = "questionid") Long questionId) {
         return questionService.updateQuestion(questionId, question);

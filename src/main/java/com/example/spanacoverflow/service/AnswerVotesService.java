@@ -45,17 +45,36 @@ public class AnswerVotesService {
     public String voteAnswer(Long answerId, Long userId, Integer vote) {
         User user = userService.getUser(userId);
         Answer answer = answerService.getAnswer(answerId);
+        User userAnswer = answer.getUser();
         if (answer.getUser().getId().equals(userId)) {
             return "User cannot vote their own answer!";
         }
         Optional<AnswerVotes> answerVotes = iAnswerVoteRepository.findByUserAndAnswer(user, answer);
         if (!answerVotes.isPresent()) {
+            if(vote==1) {
+                userAnswer.setScore(userAnswer.getScore() + 10);
+            }
+            else if(vote==-1) {
+                userAnswer.setScore(userAnswer.getScore() - 2);
+                user.setScore(user.getScore() - 1);
+            }
+            userService.updateUser(userAnswer.getId(),userAnswer);
+            userService.updateUser(user.getId(),user);
             return createAnswerVoteIfNotExistent(answerId, vote, user, answer);
         }
         if (answerVotes.get().getVote().equals(vote)) {
             return "User cannot vote twice on the same answer!";
         }
-
+        if(vote==1) {
+            userAnswer.setScore(userAnswer.getScore() + 2 + 10);
+            user.setScore(user.getScore() + 1);
+        }
+        else if(vote==-1) {
+            userAnswer.setScore(userAnswer.getScore() - 10 - 2);
+            user.setScore(user.getScore() - 1);
+        }
+        userService.updateUser(userAnswer.getId(),userAnswer);
+        userService.updateUser(user.getId(),user);
         return changeAnswerIfExistent(answerId, vote, answerVotes);
     }
 

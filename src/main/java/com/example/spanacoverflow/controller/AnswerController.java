@@ -12,6 +12,7 @@ import java.util.List;
 //sss
 @Controller
 @RequestMapping(value = "/answers")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AnswerController {
 
     @Autowired
@@ -25,13 +26,25 @@ public class AnswerController {
         return answerService.getAllAnswers();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/save")
+    @RequestMapping(method = RequestMethod.GET, value = "/getForQuestion")
+    @ResponseBody
+    public List<Answer> getAnswersForQuestion(@RequestParam(name = "questionid") Long questionId) {
+        return answerService.getAllAnswersFilteredByQuestion(questionId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getForUser")
+    @ResponseBody
+    public List<Answer> getAnswersForUser(@RequestParam(name = "userid") Long userId) {
+        return answerService.getAllAnswersFilteredByUser(userId);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/save")
     @ResponseBody
     public Answer saveAnswer(@RequestBody Answer answer, @RequestParam(name = "questionid") Long questionId, @RequestParam(name = "userid") Long userId) {
         return answerService.saveAnswer(answer, questionId, userId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/update")
+    @RequestMapping(method = RequestMethod.PUT, value = "/update")
     @ResponseBody
     public Answer updateAnswer(@RequestBody String body, @RequestParam(name = "answerid") Long answerId) {
         return answerService.updateAnswer(answerId, body);

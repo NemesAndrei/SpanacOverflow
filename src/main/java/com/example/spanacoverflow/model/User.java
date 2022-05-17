@@ -30,7 +30,13 @@ public class User {
     private String password;
 
     @Column(name = "privilege")
-    private Integer privilege;
+    private String role;
+
+    @Column(name = "banned")
+    private Boolean isBanned;
+
+    @Column(name = "score")
+    private Integer score;
 
 
 }

@@ -2,6 +2,8 @@ package com.example.spanacoverflow.model;
 
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -26,6 +28,9 @@ public class Answer {
 
     @Column(name = "votes", columnDefinition = "integer default 0")
     private Integer votes;
+
+    @Column(name = "questionTitle")
+    private String questionTitle;
 
     @ManyToOne
     @JoinColumn(name = "userid", referencedColumnName = "id")

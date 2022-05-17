@@ -33,9 +33,20 @@ public class AnswerService {
         return answerOptional.orElse(null);
     }
 
+    public List<Answer> getAllAnswersFilteredByUser(Long userId) {
+        User user = userService.getUser(userId);
+        return (List<Answer>) iAnswerRepository.findAllByUser(user);
+    }
+
+    public List<Answer> getAllAnswersFilteredByQuestion(Long questionId) {
+        Question question = questionService.getQuestion(questionId);
+        return (List<Answer>) iAnswerRepository.findAllByQuestion(question);
+    }
+
     public String deleteAnswer(Long id) {
         try {
-            iAnswerRepository.delete(this.getAnswer(id));
+            Answer answer = getAnswer(id);
+            iAnswerRepository.delete(answer);
             return "Delete success";
         } catch (Exception e) {
             return "Delete failed";
@@ -45,6 +56,7 @@ public class AnswerService {
     public Answer saveAnswer(Answer answer, Long questionId, Long userId) {
         Question question = questionService.getQuestion(questionId);
         User user = userService.getUser(userId);
+        answer.setQuestionTitle(question.getTitle());
         answer.setUser(user);
         answer.setQuestion(question);
         answer.setCreated(DateUtils.getDate());

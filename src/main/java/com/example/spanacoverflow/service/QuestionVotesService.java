@@ -43,16 +43,31 @@ public class QuestionVotesService {
     public String voteQuestion(Long questionId, Long userId, Integer vote) {
         User user = userService.getUser(userId);
         Question question = questionService.getQuestion(questionId);
+        User userQuestion = question.getUser();
         if (question.getUser().getId().equals(userId)) {
             return "User cannot vote their own question!";
         }
         Optional<QuestionVotes> questionVotes = iQuestionVoteRepository.findByUserAndQuestion(user, question);
         if (!questionVotes.isPresent()) {
+            if(vote==1) {
+                userQuestion.setScore(userQuestion.getScore() + 5);
+            }
+            else if(vote==-1) {
+                userQuestion.setScore(userQuestion.getScore() - 2);
+            }
+            userService.updateUser(userQuestion.getId(),userQuestion);
             return createQuestionVoteIfNotExistent(questionId, vote, user, question);
         }
         if (questionVotes.get().getVote().equals(vote)) {
             return "User cannot vote twice on the same question!";
         }
+        if(vote==1) {
+            userQuestion.setScore(userQuestion.getScore() +2 + 5);
+        }
+        else if(vote==-1) {
+            userQuestion.setScore(userQuestion.getScore() - 5 - 2);
+        }
+        userService.updateUser(userQuestion.getId(),userQuestion);
         return changeVoteIfExistent(questionId, vote, questionVotes);
     }
 
